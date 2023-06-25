@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <!-- Bootstrap JS and its dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <title>Home</title>
+  <style>
+    .details {
+      /* margin-top: 30px;
+            margin-left: 30px; */
+    }
+  </style>
+</head>
+
+<body>
+  <%- include('./partials/navbar.ejs') -%>
+
+  <div class="container text-center">
+    <div class="row">
+      <div class="col">
+        <h5>Academic Year : 2022 - 2023 EVEN SEMESTER</h5>
+
+      </div>
+      <div class="col">
+        <h5>Faculty Name : <%= teacher[0].name %></h5>
+      </div>
+    </div>
+    <div class="row">
+   
+      <table class="table table-bordered"
+        style="margin-top: 10px; background-color: transparent; border-color:transparent;">
+        <tr>
+          <th>
+            <h5>Year</h5>
+          </th>
+          <th>
+            <h5>Department</h5>
+          </th>
+          <th>
+            <h5>Subject</h5>
+          </th>
+        </tr>
+        <% teacher.forEach(function(teacher) { %>
+        <tr>
+          <td>
+            <%= teacher.year %>
+
+          </td>
+          <td>
+            <%= teacher.dept %>
+
+          </td>
+          <td>
+
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <%= teacher.subject %>
+
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="<%= teacher.year_id %>/<%= teacher.dept_id %>/<%= teacher.subject %>/attendance/<%= 1 %>">slot 1</a></li>
+                <li><a class="dropdown-item" href="<%= teacher.year_id %>/<%= teacher.dept_id %>/<%= teacher.subject %>/attendance/<%= 2 %>">slot 2</a></li>
+                <!-- <li><a class="dropdown-item" href="<%= teacher.year_id %>/<%= teacher.dept %>/<%= teacher.subject %>/slot3">slot 3</a></li> -->
+              </ul>
+            </div>
+
+          </td>
+        </tr>
+        <% }); %>
+      </table>
+
+    </div>
+
+
+
+</body>
+
+</html>

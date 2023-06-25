@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/faculty.css">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+  <title>Manage Students</title>
+  <style>
+   
+.container{
+        margin-top: 30px;
+        
+    }
+
+table{
+    /* background-color: #faebe4!important; */
+    border: 2px solid black;
+    color: #151111;
+    font-weight: 450;
+    box-shadow:  0.5px 1px  3px black;
+    border-collapse: collapse;
+}
+
+button[type=submit],.LogOut-btn{
+  background-color:  #8371fd;
+			border-color:  #8371fd;
+			color: #ebeaf0;
+  transition: ease-in-out 0.4s;
+margin: 0 6px;
+}
+
+button[type=submit],.LogOut-btn:hover{
+  background-color: #151111;
+  border-color: #151111;
+
+
+}
+
+.popup{
+  background: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  display: none;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+
+.card-img-top{
+    font-size: 50px !important;
+    margin-bottom: 20px !important;
+}
+.popup-content{
+  height: 550px;
+  width: 700px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+    align-items: center;
+
+}
+.main-content {
+    display: flex;
+    margin-top: 30px;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 0px;
+    align-items: center;
+  
+    text-align: center;
+}
+
+label{
+ 
+  font-weight: 500;
+  margin-bottom: 10px !important;
+  font-size: 17px;
+  color: #fc6b23;
+}
+.mb-3{
+  margin-bottom: 60px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+input[type=text]{
+  margin-top: 0px !important;
+}
+.form-control{
+  width: 100% !important;
+  }
+#formGroupExampleInput{
+  margin: 0;
+}
+.submit-btn{
+  width: 82%;
+}
+h2{
+  position: relative;
+}
+span{
+  position: absolute;
+  top: -10px;
+}
+
+.bi-x-circle-fill{
+  position: absolute;
+  top: 70px;
+  right: 403px;
+  font-size: 40px;
+  z-index: 1;
+}
+   
+    </style>
+</head>
+
+<body>
+  
+	<nav class="navbar" >
+		<div class="container-fluid">
+		  <a class="navbar-brand">Manage Students</a>
+      <div class="d-flex">
+        <form class="d-flex" action="/student-search" method="post" role="search">
+          <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        <button class="add-btn btn btn-outline-success " id="add" type="submit">Add +</button>
+			  <a  href="/auth/adminlogout" class="LogOut-btn btn btn-outline-success" type="submit">LogOut</a>
+        
+      </div>
+			
+		</div>
+	</nav>
+
+
+  <% if(addedalert) { %>
+    <div  class="alert d-flex justify-content-center alert-success  alert-dismissible fade show" role="alert">
+      <strong>Student Added Successfully!</strong>
+      <form action="/students" method="get">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" href="/students"  aria-label="Close"></button>
+      </form>
+    </div>
+  <% } %>
+
+  
+<% if(deletealert) { %>
+  <div  class="alert d-flex justify-content-center alert-warning  alert-dismissible fade show" role="alert">
+    <strong>student has been deleted!</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } %>
+
+<% if(updatealert) { %>
+  <div  class="alert d-flex justify-content-center alert-success  alert-dismissible fade show" role="alert">
+    <strong>student has been updated!</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } %>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/admin">Admin</a></li>
+      <li class="breadcrumb-item active" aria-current="page"><a href="/students">Students</a> </li>
+    </ol>
+  </nav>
+
+  <div class="popup">
+    <i class="bi bi-x-circle-fill close-btn"></i>
+    <form action="/addstudent" method="post">
+
+      <div class="popup-content">
+        <div class="popup-title">
+      <i class="bi bi-person-circle card-img-top"></i>
+
+          <h2 style="margin-bottom: 10px; margin-top: 10px;  color: #2a2928; ">Enter Students Details</h2>
+        </div>
+
+        <div class="main-content">
+
+          <div class="input1">
+            <div class="mb-3">
+              <label for="formGroupExampleInput" class="form-label">First Name *</label>
+              <input type="text" name="firstname" class="form-control " id="formGroupExampleInput" required placeholder="Name">
+            </div>
+            <div class="mb-3">
+              <label for="formGroupExampleInput" class="form-label">Phone Number *</label>
+              <input type="number"  name="phoneno" class="form-control" id="formGroupExampleInput" required placeholder="Number">
+            </div>
+          </div>  
+           
+          <div class="input2">
+            <div class="mb-3">
+              <label for="formGroupExampleInput2" class="form-label">Last Name *</label>
+              <input type="text" name="lastname" class="form-control" id="formGroupExampleInput" required placeholder="Last Name">
+              
+            </div>
+            
+            <div class="mb-3">
+              <label for="formGroupExampleInput2" class="form-label">Reg No *</label>
+              <input type="text" name="regno" class="form-control" id="formGroupExampleInput2" required placeholder="Password">
+            </div>
+          </div>  
+        </div>
+       
+        <button class="submit-btn btn btn-outline-success" type="submit">Submit</button>
+
+      </div>
+    </form>
+   
+  </div>
+
+  <div class="container" >
+
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <form action="" method="">
+              <table class="table table-hover table-bordered ">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Reg No</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <% if(student.length>0){%>
+                    <% for (i=0;i<student.length;i++){ %>
+                        <tr>
+                            <td> <%- student[i].id %></td>
+                            <td> <%- student[i].regno %></td>
+                            <td> <%- student[i].firstname %></td>
+                            <td> <%- student[i].lastname %></td>
+                            <td> <%- student[i].phoneno %></td>
+                            <td class="text-end">
+                              <a  href="/edit-student/<%- student[i].id %>" style="text-decoration: none; color: #151111;">
+                                <i  class="bi bi-pencil-square">Edit</i>
+                              </a>
+                              <a href="/deletestudent/<%- student[i].id %>"> 
+                                <i style="margin-left: 20px; text-decoration: none; color: #151111" class="bi bi-trash">Delete  </i>
+                              </a>
+                            </td>
+                           
+                        </tr>
+                    <%} %>
+        
+                <%}else{ %>
+                    <h1>data not found</h1>
+                <% }%>
+
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+  </div>
+
+      <script>
+        document.getElementById('add').addEventListener('click',()=>{
+         document.querySelector('.popup').style.display = 'flex';
+        })
+ 
+        document.querySelector('.close-btn').addEventListener('click',()=>{
+         document.querySelector('.popup').style.display = 'none';
+        })
+ 
+       </script> 
+
+
+      
+
+</body>
+</html>
