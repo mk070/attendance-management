@@ -43,7 +43,7 @@ app.use('/', require('./routes/pages'));
 app.use('/admin', require('./routes/pages'));
 app.use('/auth', require('./routes/auth'));
 
-app.listen(7000,()=>{
+app.listen(process.env.PORT,()=>{
     console.log('------server started-------')
     console.log("http://localhost:7000/")
 });
