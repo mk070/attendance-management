@@ -30,20 +30,23 @@ doenv.config({
     path:'./.env'
 });
 
-var con =mysql.createConnection({
+const con =  async ()=> {mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database:process.env.DATABASE
 
-});
+})}
 
 
 app.use('/', require('./routes/pages'));
 app.use('/admin', require('./routes/pages'));
 app.use('/auth', require('./routes/auth'));
 
-app.listen(process.env.PORT,()=>{
-    console.log('------server started-------')
-    console.log("http://localhost:7000/")
-});
+con().then(() => {
+    app.listen(process.env.PORT,()=>{
+        console.log('------server started-------')
+        console.log("http://localhost:7000/")
+    });
+})
+
