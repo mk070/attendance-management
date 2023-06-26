@@ -112,9 +112,41 @@ exports.attendance = async (req, res, next) => {
 
   const isSlot1 = slot == 1;
 
+
+  var sql = `
+  SELECT s.student_id, s.regno, s.firstname, a.hrs_conducted, a.hrs_attended,a.percentage,submitted
+  FROM students s
+  INNER JOIN attendance a ON s.student_id = a.student_id
+  WHERE s.year_id = ?
+  AND s.dept_id = ?
+  AND a.subject_id = (
+      SELECT subject_id
+      FROM subject
+      WHERE subject = ?)
+
+   ORDER BY s.student_id ASC;  `
+;
+
+  
+  con.query(sql, [year_id, dept_id, subject], (error, result) => {
+
+      if (error) throw error;
+  
+      if (result.length > 0) {
+        const { submitted } = result[0];
+    
+        if (submitted) {
+          // User has already submitted the data, render an error message or redirect to a different page
+          global.submitted=true
+        }
+      }
+    });
+
+
   const submittedSlot1 = req.session.slot1submitted || false; // Check if the form in slot 1 is submitted
   const submittedSlot2 = req.session.slot2submitted || false; // Check if the form in slot 2 is submitted
-  const submitted = isSlot1 ? req.session.slot1submitted : req.session.slot2submitted;
+  // const submitted = isSlot1 ? req.session.slot1submitted : req.session.slot2submitted;
+  const submitted =global.submitted ;
   const error = req.session.error || false; // Check if there is an error
 
 
@@ -128,7 +160,17 @@ exports.attendance = async (req, res, next) => {
   console.log(global.subject);
   console.log(global.slot);
 
-  const sql = `
+  
+  // const userHasSubmitted = req.session.submitted || false;
+
+  // if (userHasSubmitted) {
+  //   // User has already submitted the data, render an error message or redirect to a different page
+  //   return res.send( 'You have already submitted the data.' );
+  //   // res.redirect(`/${year_id}/${dept_id}/${subject}/attendance/${global.slot}`);
+
+  // }
+
+  var sql = `
     SELECT s.student_id, s.regno, s.firstname, a.hrs_conducted, a.hrs_attended,a.percentage
     FROM students s
     INNER JOIN attendance a ON s.student_id = a.student_id
@@ -406,7 +448,8 @@ exports.save_attendance = async (req, res, next) => {
         const sql = `
           UPDATE attendance
           SET hrs_attended =  ?,
-              percentage = ?
+              percentage = ?,
+              submitted=TRUE
           WHERE student_id = ?
           AND subject_id = (
             SELECT subject_id
